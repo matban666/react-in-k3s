@@ -48,7 +48,13 @@ jobs:
         mkdir -p ~/.ssh
         ssh-keyscan -H ${{ github.event.inputs.host }} >> ~/.ssh/known_hosts
 
+    - name: Copy deployment files to EC2
+      run: |
+        scp -o StrictHostKeyChecking=no deployment.yaml service.yaml ec2-user@${{ github.event.inputs.host }}:/home/ec2-user/
+
     - name: Deploy to K3s
       run: |
-        kubectl apply -f /path/to/deployment.yaml
-        kubectl apply -f /path/to/service.yaml
+        ssh -o StrictHostKeyChecking=no ec2-user@${{ github.event.inputs.host }} << 'EOF'
+          kubectl apply -f /home/ec2-user/deployment.yaml
+          kubectl apply -f /home/ec2-user/service.yaml
+        EOF
