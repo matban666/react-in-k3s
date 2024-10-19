@@ -52,6 +52,10 @@ jobs:
       run: |
         scp -o StrictHostKeyChecking=no deployment.yaml service.yaml ec2-user@${{ github.event.inputs.host }}:/home/ec2-user/
 
+    - name: Update deployment.yaml with new image tag
+      run: |
+        ssh -o StrictHostKeyChecking=no ec2-user@${{ github.event.inputs.host }} "sed -i 's|public.ecr.aws/o2v4a5o0/matban/hello-world-react:latest|public.ecr.aws/o2v4a5o0/matban/hello-world-react:${{ github.sha }}|g' /home/ec2-user/deployment.yaml"
+
     - name: Deploy to K3s
       run: |
         ssh -o StrictHostKeyChecking=no ec2-user@${{ github.event.inputs.host }} << 'EOF'

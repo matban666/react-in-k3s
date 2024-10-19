@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: hello-world-react
-        image: public.ecr.aws/533267116885/matban/hello-world-react:latest
+        image: public.ecr.aws/o2v4a5o0/matban/hello-world-react:latest
         ports:
         - containerPort: 80
