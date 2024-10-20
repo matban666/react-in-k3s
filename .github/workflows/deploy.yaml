@@ -50,7 +50,7 @@ jobs:
 
     - name: Copy deployment files to EC2
       run: |
-        scp -o StrictHostKeyChecking=no deployment.yaml service.yaml ec2-user@${{ github.event.inputs.host }}:/home/ec2-user/
+        scp -o StrictHostKeyChecking=no deployment.yaml service.yaml ingress.yaml ec2-user@${{ github.event.inputs.host }}:/home/ec2-user/
 
     - name: Update deployment.yaml with new image tag
       run: |
@@ -59,6 +59,8 @@ jobs:
     - name: Deploy to K3s
       run: |
         ssh -o StrictHostKeyChecking=no ec2-user@${{ github.event.inputs.host }} << 'EOF'
+          kubectl create secret tls yourdomain-tls --cert=/etc/letsencrypt/live/cirrina.matban.uk/fullchain.pem --key=/etc/letsencrypt/live/cirrina.matban.uk/privkey.pem
           kubectl apply -f /home/ec2-user/deployment.yaml
           kubectl apply -f /home/ec2-user/service.yaml
+          kubectl apply -f /home/ec2-user/ingress.yaml
         EOF
