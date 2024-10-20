@@ -54,7 +54,7 @@ jobs:
 
     - name: Write SSL certificates to files on EC2
       run: |
-        ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+        ssh -o StrictHostKeyChecking=no ec2-user@${{ github.event.inputs.host }} << 'EOF'
           mkdir -p /home/ec2-user/ssl
           echo "${{ secrets.SSL_CERT }}" > /home/ec2-user/ssl/fullchain.pem
           echo "${{ secrets.SSL_KEY }}" > /home/ec2-user/ssl/privkey.pem
